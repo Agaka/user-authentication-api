@@ -1,5 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express'
-import errorHandler from './models/error.handler.middleware'
+import express from 'express'
+import errorHandler from './middlewares/error.handler.middleware'
+import jwtAuthenticationMiddleware from './middlewares/jwt-authentication.middleware'
+import authorizationRoute from './routes/authorization.route'
 import statusRoute from './routes/status.route'
 import usersRoute from './routes/users.route'
 
@@ -10,9 +12,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Configurações de rotas
-app.use(usersRoute)
 app.use(statusRoute)
+app.use(authorizationRoute)
 
+app.use(jwtAuthenticationMiddleware)
+app.use(usersRoute)
 // Configuração dos handlers de erro
 app.use(errorHandler)
 
